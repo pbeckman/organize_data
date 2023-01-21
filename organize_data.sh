@@ -1,31 +1,25 @@
-# run this script from your terminal using a command like
-# >> bash ~/Documents/organize_data.sh ~/Downloads/2_V2_BACKWARD/uploads
-
-# the first argument after the `bash` command should point to the location of this script
-# the second argument should point to the folder containing your data
-# make sure your target directory doesn't have spaces in the name
-
-# if you get an error like this:
-# >> organize_data.sh: line 23: syntax error near unexpected token `do
-# you may have edited the file with an incompatible text editor :(
+# run this script from your terminal using
+# >> bash path/to/script/organize_data.sh folder/with/data/
+# where you replace `path/to/script/` and `folder/with/data/`
+# with the relevant file locations
 
 ### ###
 
-# change these variables according to your experiment :)
+# change these variables according to your experiment
 
 # make list variables containing associated IDs
+# variable names should be just letters and underscores
 # lists are declared with parantheses and no commas
-sentence_recall=("fwhp")
-NWR=("624x")
-p_b_id=("f4p8")
-test_exposure=("6m56")
+sentence_recall=("i388" "4y4f")
+NWR=("kv7i" "824j")
+digit_span=("qofa" "ffsd")
 
 # make list of the above variable names
-tasks=("sentence_recall" "NWR" "p_b_id" "test_exposure")
+tasks=("sentence_recall" "NWR" "digit_span")
 
 ### ###
 
-# you shouldn't have to change anything after this comment
+# you shouldn't have to change anything after this comment :)
 
 directory=${1%/}
 
@@ -33,7 +27,7 @@ for file in $directory/*; do
   # trim folders from beginning of file name
   file=$(basename $file)
   # make participant variable based on file name
-  participant=$([[ file =~ (?:[^-]*-){2}([^-]*) ]] && echo "${BASH_REMATCH[0]}")
+  participant=$([[ $file =~ ([^-]*-){2}([^-]*) ]] && echo "${BASH_REMATCH[2]}")
 
   # make directory for each participant
   if [ ! -d $directory/$participant ]; then
@@ -41,7 +35,7 @@ for file in $directory/*; do
   fi
   
   # move file to participant directory
-  if [[ $file =~ (?:[^-]*-){2}$participant ]]; then
+  if [[ $file =~ ([^-]*-){2}$participant ]]; then
     mv $directory/$file $directory/$participant
   fi
 done
@@ -59,10 +53,21 @@ for participant_dir in $directory/*; do
         file=$(basename $file)
 
         # move file to task directory
-        if [[ $file =~ (?:[^-]*-){4}$id ]]; then
+        if [[ $file =~ ([^-]*-){4}$id ]]; then
           mv $participant_dir/$file $participant_dir/$task
         fi
       done
     done
   done
 done
+
+### ###
+
+# if you have any issues,
+# make sure your target directory doesn't have spaces in the name
+
+# if you get an error like this:
+# >> organize_data.sh: line 23: syntax error near unexpected token `do
+# you may have edited this script with an incompatible text editor :(
+
+# if something else breaks, text me ;)
